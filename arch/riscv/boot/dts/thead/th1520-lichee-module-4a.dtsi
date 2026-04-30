@@ -40,10 +40,45 @@
 	clock-frequency = <32768>;
 };
 
+&aon {
+	regulators {
+		cpu_vdd: appcpu_dvdd {
+			regulator-name = "appcpu_dvdd";
+			regulator-min-microvolt = <300000>;
+			regulator-max-microvolt = <1570000>;
+			regulator-boot-on;
+			regulator-always-on;
+		};
+	};
+};
+
 &aogpio {
 	gpio-line-names = "", "", "",
 			  "GPIO00",
 			  "GPIO04";
+};
+
+&c910_0 {
+	cpu-supply = <&cpu_vdd>;
+};
+
+&c910_1 {
+	cpu-supply = <&cpu_vdd>;
+};
+
+&c910_2 {
+	cpu-supply = <&cpu_vdd>;
+};
+
+&c910_3 {
+	cpu-supply = <&cpu_vdd>;
+};
+
+&cpu_opp {
+	opp-1848000000 {
+		opp-hz = /bits/ 64 <1848000000>;
+		opp-microvolt = <1000000>;
+	};
 };
 
 &dmac0 {

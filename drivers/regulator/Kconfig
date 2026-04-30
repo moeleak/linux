@@ -1564,6 +1564,15 @@ config REGULATOR_STPMIC1
 	  To compile this driver as a module, choose M here: the
 	  module will be called stpmic1_regulator.
 
+config REGULATOR_TH1520_AON
+	tristate "T-HEAD TH1520 AON firmware regulator"
+	depends on TH1520_PM_DOMAINS
+	help
+	  Say y here to expose regulators controlled by the TH1520 Always-On
+	  firmware. This currently includes the CPU core rail and paired memory
+	  rail used for cpufreq voltage scaling on boards such as the Lichee Pi
+	  4A.
+
 config REGULATOR_TI_ABB
 	tristate "TI Adaptive Body Bias on-chip LDO"
 	depends on ARCH_OMAP || COMPILE_TEST

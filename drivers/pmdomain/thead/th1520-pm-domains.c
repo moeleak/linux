@@ -7,6 +7,7 @@
 
 #include <linux/auxiliary_bus.h>
 #include <linux/firmware/thead/thead,th1520-aon.h>
+#include <linux/of.h>
 #include <linux/slab.h>
 #include <linux/platform_device.h>
 #include <linux/pm_domain.h>
@@ -185,6 +186,24 @@ static int th1520_pd_reboot_init(struct device *dev,
 	return 0;
 }
 
+static int th1520_pd_regulator_init(struct device *dev,
+				    struct th1520_aon_chan *aon_chan)
+{
+	struct device_node *regulators;
+	struct auxiliary_device *adev;
+
+	regulators = of_get_child_by_name(dev->of_node, "regulators");
+	if (!regulators)
+		return 0;
+	of_node_put(regulators);
+
+	adev = devm_auxiliary_device_create(dev, "regulator", aon_chan);
+	if (!adev)
+		return -ENODEV;
+
+	return 0;
+}
+
 static int th1520_pd_probe(struct platform_device *pdev)
 {
 	struct generic_pm_domain **domains;
@@ -251,13 +270,19 @@ static int th1520_pd_probe(struct platform_device *pdev)
 	if (ret)
 		goto err_clean_provider;
 
+	ret = th1520_pd_regulator_init(dev, aon_chan);
+	if (ret)
+		goto err_clean_provider;
+
 	return 0;
 
 err_clean_provider:
 	of_genpd_del_provider(dev->of_node);
 err_clean_genpd:
-	for (i--; i >= 0; i--)
-		pm_genpd_remove(domains[i]);
+	for (i--; i >= 0; i--) {
+		if (domains[i])
+			pm_genpd_remove(domains[i]);
+	}
 err_clean_aon:
 	th1520_aon_deinit(aon_chan);
 

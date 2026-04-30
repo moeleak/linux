@@ -42,6 +42,14 @@ properties:
   "#power-domain-cells":
     const: 1
 
+  regulators:
+    type: object
+    additionalProperties: false
+    properties:
+      appcpu_dvdd:
+        $ref: /schemas/regulator/regulator.yaml#
+        unevaluatedProperties: false
+
 required:
   - compatible
   - mboxes
