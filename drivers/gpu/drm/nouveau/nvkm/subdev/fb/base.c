@@ -279,7 +279,9 @@ nvkm_fb_ctor(const struct nvkm_fb_func *func, struct nvkm_device *device,
 	mutex_init(&fb->tags.mutex);
 
 	if (func->sysmem.flush_page_init) {
-		fb->sysmem.flush_page = alloc_page(GFP_KERNEL | GFP_DMA32 | __GFP_ZERO);
+		/* Devices requiring a flush page supports at least 40-bit DMA */
+		dma_set_mask_and_coherent(device->dev, DMA_BIT_MASK(40));
+		fb->sysmem.flush_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
 		if (!fb->sysmem.flush_page)
 			return -ENOMEM;
 
