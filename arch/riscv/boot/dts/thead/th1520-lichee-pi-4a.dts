@@ -5,6 +5,7 @@
 
 #include "th1520-lichee-module-4a.dtsi"
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/thermal/thermal.h>
 
 / {
 	model = "Sipeed Lichee Pi 4A";
@@ -50,7 +51,7 @@
 	thermal-zones {
 		cpu-thermal {
 			polling-delay = <1000>;
-			polling-delay-passive = <1000>;
+			polling-delay-passive = <250>;
 			thermal-sensors = <&pvt 0>;
 
 			trips {
@@ -71,6 +72,18 @@
 					hysteresis = <5000>;
 					type = "active";
 				};
+
+				cpu_alert: cpu-alert {
+					temperature = <85000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+
+				cpu_crit: cpu-crit {
+					temperature = <110000>;
+					hysteresis = <2000>;
+					type = "critical";
+				};
 			};
 
 			cooling-maps {
@@ -87,6 +100,14 @@
 				map-active-2 {
 					cooling-device = <&fan 3 3>;
 					trip = <&fan_config2>;
+				};
+
+				map-passive {
+					cooling-device = <&c910_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+							 <&c910_1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+							 <&c910_2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+							 <&c910_3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+					trip = <&cpu_alert>;
 				};
 			};
 		};

@@ -60,18 +60,22 @@
 
 &c910_0 {
 	cpu-supply = <&cpu_vdd>;
+	#cooling-cells = <2>;
 };
 
 &c910_1 {
 	cpu-supply = <&cpu_vdd>;
+	#cooling-cells = <2>;
 };
 
 &c910_2 {
 	cpu-supply = <&cpu_vdd>;
+	#cooling-cells = <2>;
 };
 
 &c910_3 {
 	cpu-supply = <&cpu_vdd>;
+	#cooling-cells = <2>;
 };
 
 &dmac0 {
